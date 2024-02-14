@@ -26,5 +26,4 @@ new Vue({
 }).$mount('#app')
 
 export default router;
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap';
+

@@ -9,8 +9,8 @@
         <label for="nome">Nome:</label>
         <input 
           type="text" 
-          id="nome" 
-          name="nome"
+          id="btn-cadastrar" 
+          name="btn-cadastrar"
           v-model="nome"
           required
         />
@@ -23,7 +23,6 @@
           <tr>
             <th>ID</th>
             <th>Nome</th>
-            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -45,7 +44,6 @@
 import axios from 'axios';
 
 export default {
-  name: 'FuncionarioForm',
   data() {
     return {
       nome: '',
@@ -56,24 +54,29 @@ export default {
     this.listar();
   },
   methods: {
-    cadastrarNovoFuncionario() {
-      
-  if (!this.nome) {
-    alert("Por favor, preencha o campo de nome.");
-    return;
-  }
-      axios
-        .post('http://localhost:3000/routes/funcionarios/cadastrar', {
+    async cadastrarNovoFuncionario() {
+      try {
+        const response = await axios.post('http://localhost:3000/routes/funcionarios/cadastrar', {
           nome: this.nome
-        })
-        .then(response => {
-          console.log(response);
-          this.listar();
-        })
-        .catch(error => console.log("Erro ao cadastrar funcionário:",error));
-        alert("Ocorreu um erro ao cadastrar o funcionário. Por favor, tente novamente.");
+        });
+
+        console.log(response);
+        this.listar(); 
+      } catch (error) {
+        console.error(error);
+      }
     },
-    
+    async listar() {
+      try {
+        const response = await fetch('http://localhost:3000/routes/funcionarios/listar');
+        const data = await response.json();
+        console.log(data);
+        this.funcionarios = data.data;
+      } catch (error) {
+        console.error("Erro ao obter lista de funcionários:", error);
+        alert("Ocorreu um erro ao obter a lista de funcionários. Por favor, tente novamente.");
+      }
+    },
     atualizarFuncionario(id) {
       axios
         .get(`http://localhost:3000/routes/funcionarios/${id}`)
@@ -89,17 +92,17 @@ export default {
                 this.listar();
               })
               .catch(error => {
-            console.error("Erro ao atualizar funcionário:", error);
-            alert("Ocorreu um erro ao atualizar o funcionário. Por favor, tente novamente.");
-          });
+                console.error("Erro ao atualizar funcionário:", error);
+                alert("Ocorreu um erro ao atualizar o funcionário. Por favor, tente novamente.");
+              });
           } else {
             console.log("Operação cancelada.");
           }
         })
         .catch(error => {
-      console.error("Erro ao obter informações do funcionário:", error);
-      alert("Ocorreu um erro ao obter informações do funcionário. Por favor, tente novamente.");
-    });
+          console.error("Erro ao obter informações do funcionário:", error);
+          alert("Ocorreu um erro ao obter informações do funcionário. Por favor, tente novamente.");
+        });
     },
     excluirFuncionario(id) {
       const result = window.confirm("Você tem certeza que deseja excluir este Funcionário?");
@@ -111,9 +114,9 @@ export default {
             this.listar();
           })
           .catch(error => {
-        console.error("Erro ao excluir funcionário:", error);
-        alert("Ocorreu um erro ao excluir o funcionário. Por favor, tente novamente.");
-      });
+            console.error("Erro ao excluir funcionário:", error);
+            alert("Ocorreu um erro ao excluir o funcionário. Por favor, tente novamente.");
+          });
       } else {
         window.alert("Exclusão cancelada.");
       }
@@ -121,6 +124,7 @@ export default {
   }
 }
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

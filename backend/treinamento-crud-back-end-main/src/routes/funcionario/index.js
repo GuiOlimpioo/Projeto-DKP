@@ -11,7 +11,7 @@ const conn = mysql.createConnection({
 });
 
 router.get('/listar', function (req, res) {
-
+    console.log("Guilherme")
     try {
 
         conn.execute('SELECT * FROM tbl_funcionarios;', function (err, response, fields) {

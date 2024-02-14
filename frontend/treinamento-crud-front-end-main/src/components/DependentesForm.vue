@@ -26,7 +26,6 @@
               <th>ID</th>
               <th>Funcionário</th>
               <th>Nome</th>
-              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -87,7 +86,14 @@
           })
           .catch(error => console.log(error));
       },
-    
+      listar() {
+        axios
+          .get('http://localhost:3000/routes/dependentes/listar')
+          .then(response => {
+            this.dependentes = response.data.data;
+          })
+          .catch(error => console.log(error));
+      },
       atualizarDependente(id) {
         axios
           .get(`http://localhost:3000/routes/dependentes/${id}`)

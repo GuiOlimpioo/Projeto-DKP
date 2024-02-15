@@ -1,6 +1,5 @@
 <template>
     <div class="dependentes-form">
-      <h1>Cadastro</h1>
       <h2>Cadastro de Dependentes</h2>
       <hr>
   
@@ -17,15 +16,16 @@
           <label for="nome">Nome:</label>
           <input type="text" v-model="nome" id="nome" required>
           <br><br>
-          <button type="submit">Cadastrar</button>
+          <b-button type="submit">Cadastrar</b-button>
         </form>
   
-        <table class="table">
+        <table class="table table-striped table-bordered table-hover">
           <thead>
             <tr>
               <th>ID</th>
               <th>Funcionário</th>
               <th>Nome</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -34,8 +34,8 @@
               <td>{{ dependente.funcionario }}</td>
               <td>{{ dependente.dependente }}</td>
               <td>
-                <button @click="atualizarDependente(dependente.id)">Alterar</button>
-                <button @click="excluirDependente(dependente.id)">Excluir</button>
+                <b-button variant="primary" @click="atualizarDependente(dependente.id)" style="margin-right: 10px;">Alterar</b-button>
+                <b-button variant="danger" @click="excluirDependente(dependente.id)" style="margin-left: 10px;">Excluir</b-button>
               </td>
             </tr>
           </tbody>
@@ -95,32 +95,27 @@
           .catch(error => console.log(error));
       },
       atualizarDependente(id) {
-        axios
-          .get(`http://localhost:3000/routes/dependentes/${id}`)
-          .then(response => {
-            const id_funcionario = window.prompt("ID do funcionário:", response.data.data.id_funcionario);
-            if (id_funcionario !== null) {
-              const nome_dependente = window.prompt("Nome do dependente:", response.data.data.dependente);
-              if (nome_dependente !== null) {
-                axios
-                  .patch(`http://localhost:3000/routes/dependentes/alterar/${id}`, {
-                    id_funcionario: id_funcionario,
-                    nome: nome_dependente,
-                  })
-                  .then(response => {
-                    console.log(response);
-                    this.listar();
-                  })
-                  .catch(error => console.log(error));
-              } else {
-                console.log("Operação cancelada.");
-              }
-            } else {
-              console.log("Operação cancelada.");
-            }
-          })
-          .catch(error => console.log(error));
-      },
+    axios
+      .get(`http://localhost:3000/routes/dependentes/${id}`)
+      .then(response => {
+        const nome_dependente = window.prompt("Nome do dependente:", response.data.data.dependente);
+        if (nome_dependente !== null) {
+          axios
+            .patch(`http://localhost:3000/routes/dependentes/alterar/${id}`, {
+              nome: nome_dependente,
+            })
+            .then(response => {
+              console.log(response);
+              this.listar();
+            })
+            .catch(error => console.log(error));
+        } else {
+          console.log("Operação cancelada.");
+        }
+      })
+      .catch(error => console.log(error));
+},
+
       excluirDependente(id) {
         const result = window.confirm("Você tem certeza que deseja excluir este Dependente?");
         if (result) {

@@ -1,6 +1,5 @@
 <template>
   <div class="funcionario-form">
-    <h1>Cadastro</h1>
     <h2>Cadastro de Funcionários</h2>
     <hr>
 
@@ -15,7 +14,7 @@
           required
         />
         <br><br>
-        <button type="submit">Cadastrar</button>
+        <b-button type="submit">Cadastrar</b-button>
       </form>
 
       <table class="table table-striped table-bordered table-hover">
@@ -23,6 +22,7 @@
           <tr>
             <th>ID</th>
             <th>Nome</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -30,8 +30,9 @@
             <td>{{ funcionario.id }}</td>
             <td>{{ funcionario.nome }}</td>
             <td>
-              <button @click="atualizarFuncionario(funcionario.id)">Alterar</button>
-              <button @click="excluirFuncionario(funcionario.id)">Excluir</button>
+              <b-button variant="primary" @click="atualizarFuncionario(funcionario.id)" style="margin-right: 10px;">Alterar</b-button>
+              <b-button variant="danger" @click="excluirFuncionario(funcionario.id)" style="margin-left: 10px;">Excluir</b-button>
+              
             </td>
           </tr>
         </tbody>
@@ -78,32 +79,38 @@ export default {
       }
     },
     atualizarFuncionario(id) {
-      axios
-        .get(`http://localhost:3000/routes/funcionarios/${id}`)
-        .then(response => {
-          const nome_funcionario = window.prompt("Nome do funcionário:", response.data.data.nome);
-          if (nome_funcionario !== null) {
-            axios
-              .patch(`http://localhost:3000/routes/funcionarios/alterar/${id}`, {
-                nome: nome_funcionario,
-              })
-              .then(response => {
-                console.log(response);
-                this.listar();
-              })
-              .catch(error => {
-                console.error("Erro ao atualizar funcionário:", error);
-                alert("Ocorreu um erro ao atualizar o funcionário. Por favor, tente novamente.");
-              });
-          } else {
-            console.log("Operação cancelada.");
-          }
-        })
-        .catch(error => {
-          console.error("Erro ao obter informações do funcionário:", error);
-          alert("Ocorreu um erro ao obter informações do funcionário. Por favor, tente novamente.");
-        });
-    },
+  axios
+    .get(`http://localhost:3000/routes/funcionarios/${id}`)
+    .then(response => {
+      const novo_id_funcionario = window.prompt("Novo ID do funcionário:", response.data.data.id);
+      if (novo_id_funcionario !== null) {
+        const nome_funcionario = window.prompt("Novo nome do funcionário:", response.data.data.nome);
+        if (nome_funcionario !== null) {
+          axios
+            .patch(`http://localhost:3000/routes/funcionarios/alterar/${id}`, {
+              id: novo_id_funcionario, 
+              nome: nome_funcionario,
+            })
+            .then(response => {
+              console.log(response);
+              this.listar();
+            })
+            .catch(error => {
+              console.error("Erro ao atualizar funcionário:", error);
+              alert("Ocorreu um erro ao atualizar o funcionário. Por favor, tente novamente.");
+            });
+        } else {
+          console.log("Operação cancelada.");
+        }
+      } else {
+        console.log("Operação cancelada.");
+      }
+    })
+    .catch(error => {
+      console.error("Erro ao obter informações do funcionário:", error);
+      alert("Ocorreu um erro ao obter informações do funcionário. Por favor, tente novamente.");
+    });
+},
     excluirFuncionario(id) {
       const result = window.confirm("Você tem certeza que deseja excluir este Funcionário?");
       if (result) {

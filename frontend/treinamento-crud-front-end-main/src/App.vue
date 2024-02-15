@@ -3,6 +3,7 @@
     <nav>
       <router-link to="/funcionarios" active-class="active">Funcionários</router-link>
       <router-link to="/dependentes" active-class="active">Dependentes</router-link>
+      <router-link to="/fornecedores" active-class="active">Fornecedores</router-link>
     </nav>
     <div>
       <router-view></router-view>
@@ -11,6 +12,7 @@
       <div>Design in {{ new Date().getFullYear() }}</div>
     </footer>
   </div>
+
 </template>
 
 

@@ -11,7 +11,6 @@ const conn = mysql.createConnection({
 });
 
 router.get('/listar', function (req, res) {
-    console.log("Guilherme")
     try {
 
         conn.execute('SELECT * FROM tbl_funcionarios;', function (err, response, fields) {
@@ -82,27 +81,23 @@ router.post('/cadastrar', function (req, res) {
 });
 
 router.patch('/alterar/:id', function (req, res) {
-
     try {
-
-        conn.execute('UPDATE tbl_funcionarios SET nome = ? WHERE id = ?;', [req.body.nome, req.params.id], function (err, response, fields) {
-
+        conn.execute('UPDATE tbl_funcionarios SET id = ?, nome = ? WHERE id = ?;', [req.body.id, req.body.nome, req.params.id], function (err, response, fields) {
             if (err) throw err;
-    
+
             res.status(200).json({
                 msg: 'Funcionário atualizado com sucesso!',
                 data: response
             });
         });
-        
     } catch (error) {
-        
         res.status(500).json({
             msg: 'Erro ao atualizar funcionário!',
             data: error
         });
     }
 });
+
 
 router.delete('/excluir/:id', function (req, res) {
 

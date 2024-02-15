@@ -97,27 +97,26 @@ router.post('/cadastrar', function (req, res) {
 });
 
 router.patch('/alterar/:id', function (req, res) {
-
     try {
-
-        conn.execute('UPDATE tbl_dependentes SET id_funcionario = ?, nome = ? WHERE id = ?;', [req.body.id_funcionario, req.body.nome, req.params.id], function (err, response, fields) {
-
-            if (err) throw err;
-    
-            res.status(200).json({
-                msg: 'Dependente atualizado com sucesso!',
-                data: response
-            });
-        });
+        conn.execute('UPDATE tbl_dependentes SET nome = ? WHERE id = ?;', 
+            [req.body.nome, req.params.id], 
+            function (err, response, fields) {
+                if (err) throw err;
         
+                res.status(200).json({
+                    msg: 'Dependente atualizado com sucesso!',
+                    data: response
+                });
+            }
+        );
     } catch (error) {
-        
         res.status(500).json({
             msg: 'Erro ao atualizar dependente!',
             data: error
         });
     }
 });
+
 
 router.delete('/excluir/:id', function (req, res) {
 
